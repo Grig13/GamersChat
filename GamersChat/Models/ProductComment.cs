@@ -1,5 +1,8 @@
-﻿namespace GamersChat.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GamersChat.Models
 {
+    [Table("ProductsComments")]
     public class ProductComment
     {
         public Guid Id { get; set; }

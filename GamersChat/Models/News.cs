@@ -1,5 +1,8 @@
-﻿namespace GamersChat.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GamersChat.Models
 {
+    [Table("News")]
     public class News
     {
         public Guid Id { get; set; }
