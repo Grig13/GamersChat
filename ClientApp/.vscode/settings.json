@@ -3,6 +3,8 @@
         "APPDATA",
         "aspnet",
         "ASPNETCORE",
+        "confirmdialog",
+        "dataview",
         "devkit",
         "gamerschat",
         "jasminewd",
@@ -12,6 +14,8 @@
         "prestart",
         "primeicons",
         "primeng",
+        "signin",
+        "signout",
         "textbox",
         "weatherforecast"
     ]

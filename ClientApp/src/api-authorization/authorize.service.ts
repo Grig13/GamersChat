@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User, UserManager } from 'oidc-client';
+import { Profile, User, UserManager } from 'oidc-client';
 import { BehaviorSubject, concat, from, Observable } from 'rxjs';
 import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 import { ApplicationPaths, ApplicationName } from './api-authorization.constants';
@@ -55,12 +55,28 @@ export class AuthorizeService {
       this.userSubject.asObservable());
   }
 
-  public getAccessToken(): Observable<string | null> {
-    return from(this.ensureUserManagerInitialized())
-      .pipe(mergeMap(() => from(this.userManager!.getUser())),
-        map(user => user && user.access_token));
+  public getRole(): Observable<string | null>{
+    return this.getUser().pipe(map(user => {
+      let newUser = user as Profile;
+      return (newUser && newUser["role"]);
+    }));
   }
 
+  public getUserId(): Observable<string | null>{
+    return this.getUser().pipe(map(user => {
+      let newUser = user as Profile;
+      return (newUser && newUser["sub"]);
+    }));
+  }
+
+  public getAccessToken(): Observable<string> {
+    return from(this.ensureUserManagerInitialized())
+      .pipe(
+        mergeMap(() => from(this.userManager!.getUser())),
+        map(user => user && user.access_token || ''),
+      );
+  }
+  
   // We try to authenticate the user in three different ways:
   // 1) We try to see if we can authenticate the user silently. This happens
   //    when the user is already logged in on the IdP and is done using a hidden iframe

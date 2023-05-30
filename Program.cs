@@ -30,8 +30,6 @@ builder.Services.AddAuthentication()
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<NewsService>();
 
-builder.Services.AddScoped<CartService>();
-builder.Services.AddScoped<ICartRepository, CartRepository>();
 
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<PostCommentService>();
@@ -39,11 +37,11 @@ builder.Services.AddScoped<PostCommentService>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<PostService>();
 
-builder.Services.AddScoped<IProductCommentRepository, ProductCommentRepository>();
-builder.Services.AddScoped<ProductCommentService>();
-
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
+
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<MessageService>();
 
 builder.Services.AddScoped<ITimelineRepository, TimelineRepository>();
 builder.Services.AddScoped<TimelineService>();

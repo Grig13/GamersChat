@@ -15,12 +15,11 @@ namespace GamersChat.Data
 
         }
 
-        public DbSet<Cart> Carts { get; set; }
         public DbSet<News> News { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductComment> ProductComments { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<Timeline> Timelines { get; set; }
     }
 }

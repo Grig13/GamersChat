@@ -82,9 +82,9 @@ body::-webkit-scrollbar-thumb, .textbox::-webkit-scrollbar-thumb {
 }
 
 .card-container{
-    margin-left: 300px;
+    width: 1200px;
     display: inline-block;
-    margin-right: 2%;
+    margin: 0 auto;
     margin-bottom: 2%;
 }
 

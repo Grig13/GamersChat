@@ -20,6 +20,15 @@ import { DataViewModule } from 'primeng/dataview';
 import { RatingModule } from 'primeng/rating';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NewsComponent } from './news/news.component';
+import { StoreComponent } from './store/store.component';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TagModule } from 'primeng/tag';
+import { DropdownModule } from 'primeng/dropdown';
+import { DataViewLayoutOptions } from 'primeng/dataview';
+import { ProductDetailsComponent } from './product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +37,9 @@ import { NewsComponent } from './news/news.component';
     HomeComponent,
     CounterComponent,
     FetchDataComponent,
-    NewsComponent
+    NewsComponent,
+    StoreComponent,
+    ProductDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -40,8 +51,14 @@ import { NewsComponent } from './news/news.component';
     CommonModule,
     SharedModule,
     DataViewModule,
+    DropdownModule,
     FormsModule,
     RatingModule,
+    TagModule,
+    ToastModule,
+    ConfirmDialogModule,
+    TableModule,
+    ToolbarModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,
     ApiAuthorizationModule,
@@ -49,10 +66,12 @@ import { NewsComponent } from './news/news.component';
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
       { path: 'news', component: NewsComponent, canActivate: [AuthorizeGuard] },
+      { path: 'store', component: StoreComponent, canActivate: [AuthorizeGuard]},
+      { path: 'store/details/:id', component: ProductDetailsComponent, canActivate: [AuthorizeGuard]}
     ])
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }, DataViewLayoutOptions
   ],
   bootstrap: [AppComponent]
 })

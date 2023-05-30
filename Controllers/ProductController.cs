@@ -1,62 +1,76 @@
-﻿using GamersChat.Services;
+﻿using GamersChat.Models;
+using GamersChat.Services;
 using GamersChatAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamersChat.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [EnableCors("AllowOrigin")]
     [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly ProductService _productService;
-        private readonly ProductCommentService _pcService;
 
-        public ProductController(ProductService productService, ProductCommentService pcService)
+        public ProductController(ProductService productService)
         {
             _productService = productService;
-            _pcService = pcService;
         }
 
         [HttpGet]
-        public IActionResult GetAllProducts()
+        public IEnumerable<Product> GetAllProducts()
         {
-            var products = this._productService.GetAllProducts();
-            return Ok(products);
+            return _productService.GetAllProducts();
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetProductById(Guid id)
+        public ActionResult<Product> GetProduct(Guid id)
         {
-            var comment = this._productService.GetProductById(id);
-            return Ok(comment);
+            var product = _productService.GetProduct(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return product;
         }
 
         [HttpPost]
         public IActionResult AddProduct(Product product)
         {
+            Console.WriteLine("AddProduct method fired!");
+            if (!ModelState.IsValid)
+            {
+                // Return a 400 Bad Request response with validation errors
+                return BadRequest(ModelState);
+            }
             _productService.AddProduct(product);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public Product Update(Guid id, [FromBody] Product product)
+        public Product EditProduct(Guid id, [FromBody]Product product)
         {
-            var productToEdit = _productService.GetProductById(id);
-            productToEdit.Name = product.Name;
+            var productToEdit = _productService.GetProduct(id);
+            productToEdit.Title = product.Title;
             productToEdit.Description = product.Description;
             productToEdit.Category = product.Category;
             productToEdit.Price = product.Price;
+            productToEdit.City = product.City;
+            productToEdit.Email = product.Email;
+            productToEdit.CanDeliver = product.CanDeliver;
             productToEdit.ImageUrl = product.ImageUrl;
-            return this._productService.ProductUpdate(productToEdit);
-
+            productToEdit.IsNew= product.IsNew;
+            productToEdit.PhoneNumber = product.PhoneNumber;
+            return this._productService.EditProduct(productToEdit);
         }
 
-        [HttpDelete("{productId}")]
-        public IActionResult DeleteProduct(Guid productId)
+        [HttpDelete("{id}")]
+        public IActionResult DeleteProduct(Guid id)
         {
-            _productService.DeleteProduct(productId);
+            _productService.DeleteProduct(id);
             return Ok();
         }
     }

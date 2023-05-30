@@ -1,14 +1,21 @@
-import { ProductComments } from "./product-comments.model";
-
+import { User } from "./user.model";
 
 export interface Product {
     id?: string;
-    name: string;
-    price: number;
+    title: string;
     description: string;
+    price: number;
     imageUrl: string;
     category: string;
-    comments?: ProductComments[];
-}
+    isNew: string;
+    canDeliver: string;
+    city: string;
+    phoneNumber: string;
+    email: string;
+    createdDate?: Date;
+    userId?: string;
+    user?: User;
+  }
+  
   
   

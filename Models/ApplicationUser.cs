@@ -10,5 +10,6 @@ namespace GamersChat.Models
         public string? ProfilePicture { get; set; }
         public string? Description { get; set; }
         public ICollection<Post>? Posts { get; set; }
+        public ICollection<Product>? Products { get; set; }
     }
 }

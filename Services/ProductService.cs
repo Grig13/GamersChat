@@ -1,40 +1,41 @@
-﻿using GamersChat.Repositories.Interfaces;
-using GamersChatAPI.Models;
+﻿using GamersChat.Models;
+using GamersChat.Repositories;
+using GamersChat.Repositories.Interfaces;
 
 namespace GamersChat.Services
 {
     public class ProductService
     {
-        private readonly IProductRepository productRepository;
+        private readonly IProductRepository _productRepository;
 
         public ProductService(IProductRepository productRepository)
         {
-            this.productRepository = productRepository;
+            _productRepository = productRepository;
         }
 
-        public IEnumerable<Product> GetAllProducts()
+        public void AddProduct(Product product)
         {
-            return this.productRepository.GetAll();
+            _productRepository.AddProduct(product);
         }
 
-        public Product GetProductById(Guid productId)
+        public Product EditProduct(Product product)
         {
-            return this.productRepository.GetById(productId);
-        }
-
-        public void AddProduct(Product productToAdd)
-        {
-            this.productRepository.Add(productToAdd);
-        }
-
-        public Product ProductUpdate(Product productToUpdate)
-        {
-            return this.productRepository.Update(productToUpdate);
+            return this._productRepository.EditProduct(product);
         }
 
         public void DeleteProduct(Guid productId)
         {
-            this.productRepository.DeleteById(productId);
+            _productRepository.DeleteProduct(productId);
+        }
+
+        public Product GetProduct(Guid productId)
+        {
+            return _productRepository.GetProduct(productId);
+        }
+
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return _productRepository.GetAllProducts();
         }
     }
 }

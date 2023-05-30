@@ -1,60 +1,62 @@
 ﻿using GamersChat.Data;
+using GamersChat.Models;
 using GamersChat.Repositories.Interfaces;
 using GamersChatAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GamersChat.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        protected readonly ApplicationDbContext _dbContext;
-        
-        public ProductRepository(ApplicationDbContext dbContext)
+        private readonly ApplicationDbContext _context;
+
+        public ProductRepository(ApplicationDbContext context)
         {
-            _dbContext = dbContext;
+            _context = context;
         }
 
-        public void Add(Product productToAdd)
+        public void AddProduct(Product product)
         {
-            _dbContext.Set<Product>().Add(productToAdd);
-            _dbContext.SaveChanges();
+            product.Id = Guid.NewGuid();
+            _context.Products.Add(product);
+            _context.SaveChanges();
         }
 
-        public void DeleteById(Guid id)
+        public Product EditProduct(Product product)
         {
-            var product = GetById(id);
-            _dbContext.Set<Product>().Remove(product);
-            _dbContext.SaveChanges();
-        }
-
-        public IEnumerable<Product> GetAll()
-        {
-            return _dbContext.Set<Product>().ToList();
-        }
-
-        public Product GetById(Guid id)
-        {
-            var productToReturn = _dbContext.Set<Product>().Where(a => a.Id == id).FirstOrDefault();
-            if (productToReturn == null)
-            {
-                throw new KeyNotFoundException("Product not found.");
-            }
-            return productToReturn;
-        }
-
-        public Product Update(Product productToUpdate)
-        {
-            var existingProduct = GetById((Guid)productToUpdate.Id);
-            if (existingProduct == null)
-            {
-                throw new ArgumentException($"News with id: {productToUpdate.Id} not found.");
-            }
-            existingProduct.Name = productToUpdate.Name;
-            existingProduct.Price = productToUpdate.Price;
-            existingProduct.Description = productToUpdate.Description;
-            existingProduct.ImageUrl = productToUpdate.ImageUrl;
-            existingProduct.Category = productToUpdate.Category;
-            _dbContext.SaveChanges();
+            var existingProduct = GetProduct(product.Id);
+            existingProduct.Title = product.Title;
+            existingProduct.Price = product.Price;
+            existingProduct.Description = product.Description;
+            existingProduct.CanDeliver = product.CanDeliver;
+            existingProduct.IsNew = product.IsNew;
+            existingProduct.PhoneNumber = product.PhoneNumber;
+            existingProduct.Email = product.Email;
+            existingProduct.City = product.City;
+            existingProduct.Category = product.Category;
+            existingProduct.ImageUrl = product.ImageUrl;
+            _context.SaveChanges();
             return existingProduct;
+        }
+
+        public void DeleteProduct(Guid productId)
+        {
+            var product = _context.Products.Find(productId);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                _context.SaveChanges();
+            }
+        }
+
+        public Product GetProduct(Guid productId)
+        {
+            return _context.Products.Find(productId);
+        }
+
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return _context.Products.ToList();
         }
     }
 }
