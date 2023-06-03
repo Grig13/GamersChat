@@ -31,6 +31,7 @@ export enum AuthenticationResultStatus {
 
 export interface IUser {
   name?: string;
+  profilePicture?: string;
 }
 
 @Injectable({
@@ -75,6 +76,12 @@ export class AuthorizeService {
         mergeMap(() => from(this.userManager!.getUser())),
         map(user => user && user.access_token || ''),
       );
+  }
+
+  public getUserProfilePicture(): Observable<string | null> {
+    return this.getUser().pipe(
+      map((user: IUser | null) => user?.profilePicture ?? null)
+    );
   }
   
   // We try to authenticate the user in three different ways:

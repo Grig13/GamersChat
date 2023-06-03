@@ -20,6 +20,7 @@ namespace GamersChat.Data
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<ApplicationUserDTO> ApplicationUsersDTO { get; set; }
         public DbSet<Timeline> Timelines { get; set; }
     }
 }

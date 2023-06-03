@@ -1,0 +1,72 @@
+::ng-deep .p-image {
+  border: none !important;
+}
+
+::ng-deep .p-image-preview-container {
+  padding: 0 !important;
+}
+
+/* Add this CSS to your component's CSS file or styles.scss */
+::ng-deep .p-image .p-image-wrapper {
+    border: none !important;
+    padding: 0 !important;
+}
+  
+::ng-deep .p-image .p-image-preview-container {
+    padding: 0 !important;
+}
+
+
+.flex-container{
+    display: flex;
+    flex-direction: row;
+
+}
+
+.right-side-container{
+    margin-left: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-info-container{
+    padding: 5%;
+}
+
+.sub-title-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.date, .city, .delivery, .category, .new{
+    margin-right: 5px;
+}
+
+.sub-title-container p-chip{
+    margin-right: 10px;
+    width: 100%;
+}
+
+.title{
+    font-weight: 900;
+    color: #373737;
+}
+
+.price-container{
+    font-size: 55px;
+    font-weight: 900;
+    align-self: center;
+    margin-top: 10%;
+}
+
+.product-description-container{
+    margin-top: 5%;
+}
+
+.description-title{
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 2%;
+}

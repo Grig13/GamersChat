@@ -98,7 +98,7 @@
                         </div>
                         <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
                             <span class="text-2xl font-semibold">{{'RON '+ product.price }}</span>
-                            <button pButton icon="pi pi-info-circle" class="md:align-self-end mb-2 p-button-rounded" routerLink="details/{{product.id}}"></button>
+                            <button pButton icon="pi pi-info-circle" class="md:align-self-end mb-2 p-button-rounded" routerLink="details/{{product.id}}" ></button>
                             <div *ngIf="product.userId == userId2" class="card-buttons">
                                 <div title="Edit Project" class="md:align-self-end mb-2 p-button-rounded card-button pi pi-pencil" (click)="showEditDialog(product)"></div>
                                 <div title="Delete Project" class="md:align-self-end mb-2 p-button-rounded card-button pi pi-trash" (click)="showDeleteDialog(product)"></div>

@@ -29,6 +29,9 @@ import { TagModule } from 'primeng/tag';
 import { DropdownModule } from 'primeng/dropdown';
 import { DataViewLayoutOptions } from 'primeng/dataview';
 import { ProductDetailsComponent } from './product-details/product-details.component';
+import { GalleriaModule } from 'primeng/galleria';
+import { ImageModule } from 'primeng/image';
+import { ChipModule } from 'primeng/chip';
 
 @NgModule({
   declarations: [
@@ -56,8 +59,11 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
     RatingModule,
     TagModule,
     ToastModule,
+    GalleriaModule,
+    ImageModule,
     ConfirmDialogModule,
     TableModule,
+    ChipModule,
     ToolbarModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,

@@ -30,6 +30,8 @@ builder.Services.AddAuthentication()
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<NewsService>();
 
+builder.Services.AddScoped<IUserDTORepository, UserDTORepository>();
+builder.Services.AddScoped<UserDTOService>();
 
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<PostCommentService>();

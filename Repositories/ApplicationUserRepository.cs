@@ -1,6 +1,7 @@
 ﻿using GamersChat.Data;
 using GamersChat.Models;
 using GamersChat.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GamersChat.Repositories
@@ -8,9 +9,11 @@ namespace GamersChat.Repositories
     public class ApplicationUserRepository : IApplicationUserRepository
     {
         protected readonly ApplicationDbContext dbContext;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ApplicationUserRepository(ApplicationDbContext dbContext)
+        public ApplicationUserRepository(ApplicationDbContext dbContext, UserManager<ApplicationUser> UserManager)
         {
+            this.userManager = userManager;
             this.dbContext = dbContext;
         }
 
@@ -58,6 +61,43 @@ namespace GamersChat.Repositories
             dbContext.Set<ApplicationUser>().Update(userToUpdate);
             dbContext.SaveChanges();
             return userToUpdate;
+        }
+
+        public ApplicationUser GetUserById(string userId)
+        {
+            return userManager.FindByIdAsync(userId).Result;
+        }
+
+        public bool UpdateUserAttributes(ApplicationUser user, ApplicationUserDTO attributes)
+        {
+            user.FirstName = attributes.FirstName;
+            user.LastName = attributes.LastName;
+            user.ProfilePicture = attributes.ProfilePicture;
+            user.Description = attributes.Description;
+
+            var result = userManager.UpdateAsync(user).Result;
+            return result.Succeeded;
+        }
+
+        public async Task<bool> CreateOrUpdateUserAttributesAsync(string userId, ApplicationUserDTO attributes)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                // User doesn't exist, handle the error or return false
+                return false;
+            }
+
+            // Update the user attributes
+            user.FirstName = attributes.FirstName;
+            user.LastName = attributes.LastName;
+            user.ProfilePicture = attributes.ProfilePicture;
+            user.Description = attributes.Description;
+
+            var result = await userManager.UpdateAsync(user);
+
+            return result.Succeeded;
         }
     }
 }

@@ -1,1 +1,40 @@
-<p>product-details works!</p>
+<div *ngIf="product">
+    <div class="flex-container">
+        <div class="image-container">
+            <p-image style="border: none; padding: 0;" [src]="product.imageUrl" [alt]="product.title" width="656" [preview]="true"></p-image>
+        </div>
+        <div class="right-side-container">
+            <div class="card product-info-container">
+                <h2 class="title">{{product.title}}</h2>
+                <div class="sub-title-container">
+                    <p-chip label="{{ product.createdDate | date:'shortDate' }}"></p-chip>
+                    <p-chip label="{{product.category}}"></p-chip>
+                    <p-chip label="Delivery: {{product.canDeliver}}"></p-chip>
+                    <p-chip label="New? {{product.isNew}}"></p-chip>
+                </div>
+                <div class="price-container">
+                    <div>{{product.price | currency:'RON '}}</div>
+                </div>
+            </div>
+            <div *ngIf="userAttributes; else noUser" class="card seller-info-container">
+                <div class="profile-image">{{userAttributes.profilePicture}}</div>
+                <div class="name">{{userAttributes.firstName}}</div>
+                <div class="last-name">{{userAttributes.lastName}}</div>
+                <p-chip label="{{product.city}}"></p-chip>
+            </div>
+            <ng-template #noUser>
+                <div>
+                    This user has made his personal information private! You can contact him only by email or phone number!
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="product-description-container">
+        <div class="description-title">
+            Description
+        </div>
+        <div class="description">
+            {{product.description}}
+        </div>
+    </div>
+</div>

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { UserDTO } from 'src/models/UserDTO.model';
 import { User } from 'src/models/user.model';
 
 @Injectable({
@@ -17,7 +18,7 @@ export class UserService {
     return this.httpClient.get<User[]>(`${environment.apiUrl}/${this.url}`);
   }
 
-  public getUserById(id: string): Observable<User>{
+  public getUser(id: string): Observable<User>{
     return this.httpClient.get<User>(`${environment.apiUrl}/${this.url}/${id}`);
   }
 

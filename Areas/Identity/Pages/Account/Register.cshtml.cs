@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GamersChat.Areas.Identity.Pages.Account
 {
@@ -30,13 +31,15 @@ namespace GamersChat.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IWebHostEnvironment hostingEnvironment)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
@@ -98,6 +102,12 @@ namespace GamersChat.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            public string ProfilePicture { get; set; }
+            public InputModel(IWebHostEnvironment hostingEnvironment)
+            {
+                ProfilePicture = "/assets/profile-placeholder.png";
+                ProfilePicture = Path.Combine(hostingEnvironment.ContentRootPath, ProfilePicture);
+            }
         }
 
 

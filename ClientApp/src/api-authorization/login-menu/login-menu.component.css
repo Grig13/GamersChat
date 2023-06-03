@@ -1,0 +1,44 @@
+.profile-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  
+  .dropdown-menu {
+    min-width: 150px;
+    padding: 0.5rem 0;
+  }
+  
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+  }
+  
+  .dropdown-item:hover {
+    color: #0d6efd;
+    background-color: rgba(13, 110, 253, 0.1);
+  }
+  
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-button {
+    margin: 0;
+    padding-left: 5px;
+}
+
+.logout-button {
+    padding-left: 5px;
+}
+  

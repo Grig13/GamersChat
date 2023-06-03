@@ -46,5 +46,44 @@ namespace GamersChat.Services
         {
             return this.userRepository.GetAdminUsers();
         }
+
+        public ApplicationUserDTO GetUser(string userId)
+        {
+            var user = userRepository.GetUserById(userId);
+            return MapToDto(user);
+        }
+
+        public bool UpdateUserAttributes(string userId, ApplicationUserDTO attributes)
+        {
+            var user = userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                // User not found, handle the error or return false
+                return false;
+            }
+
+            return userRepository.UpdateUserAttributes(user, attributes);
+        }
+
+        public async Task<bool> CreateOrUpdateUserAttributesAsync(string userId, ApplicationUserDTO attributes)
+        {
+            return await userRepository.CreateOrUpdateUserAttributesAsync(userId, attributes);
+        }
+
+        private ApplicationUserDTO MapToDto(ApplicationUser user)
+        {
+            // Map the ApplicationUser to ApplicationUserDTO
+            var userDto = new ApplicationUserDTO
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                ProfilePicture = user.ProfilePicture,
+                Description = user.Description
+            };
+
+            return userDto;
+        }
+
+
     }
 }
