@@ -1,7 +1,7 @@
 <div *ngIf="product">
     <div class="flex-container">
         <div class="image-container">
-            <p-image style="border: none; padding: 0;" [src]="product.imageUrl" [alt]="product.title" width="656" [preview]="true"></p-image>
+            <p-image [src]="product.imageUrl" [alt]="product.title" width="656" [preview]="true"></p-image>
         </div>
         <div class="right-side-container">
             <div class="card product-info-container">
@@ -21,7 +21,10 @@
                 <div class="name">{{userAttributes.firstName}}</div>
                 <div class="last-name">{{userAttributes.lastName}}</div>
                 <p-chip label="{{product.city}}"></p-chip>
+                
             </div>
+            <p-button (click)="openMessageTab()" label="Message"></p-button>
+            <app-message-tab *ngIf="showMessageTab" ></app-message-tab>
             <ng-template #noUser>
                 <div>
                     This user has made his personal information private! You can contact him only by email or phone number!

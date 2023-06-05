@@ -21,6 +21,8 @@ export class ProductDetailsComponent implements OnInit {
   userAttributes?: UserDTO;
   productUserId: any;
 
+  showMessageTab: boolean = false;
+
   responsiveOptions: any[] = [
     {
         breakpoint: '1024px',
@@ -85,5 +87,9 @@ export class ProductDetailsComponent implements OnInit {
         console.log(response);
       }
     });
+  }
+
+  openMessageTab(): void {
+    this.showMessageTab = !this.showMessageTab;
   }
 }

@@ -30,6 +30,7 @@ export enum AuthenticationResultStatus {
 }
 
 export interface IUser {
+  id?: string;
   name?: string;
   profilePicture?: string;
 }

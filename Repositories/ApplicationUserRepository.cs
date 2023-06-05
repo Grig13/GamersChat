@@ -11,7 +11,7 @@ namespace GamersChat.Repositories
         protected readonly ApplicationDbContext dbContext;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ApplicationUserRepository(ApplicationDbContext dbContext, UserManager<ApplicationUser> UserManager)
+        public ApplicationUserRepository(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             this.userManager = userManager;
             this.dbContext = dbContext;
@@ -65,7 +65,9 @@ namespace GamersChat.Repositories
 
         public ApplicationUser GetUserById(string userId)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return userManager.FindByIdAsync(userId).Result;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public bool UpdateUserAttributes(ApplicationUser user, ApplicationUserDTO attributes)

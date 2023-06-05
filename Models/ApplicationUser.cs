@@ -9,7 +9,13 @@ namespace GamersChat.Models
         public string? LastName { get; set; }
         public string? ProfilePicture { get; set; }
         public string? Description { get; set; }
+        public ICollection<Message> Messages { get; set; }
         public ICollection<Post>? Posts { get; set; }
         public ICollection<Product>? Products { get; set; }
+
+        public ApplicationUser()
+        {
+            Messages = new HashSet<Message>();
+        }
     }
 }

@@ -21,6 +21,17 @@ namespace GamersChat.Data
         public DbSet<Product> Products { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<ApplicationUserDTO> ApplicationUsersDTO { get; set; }
+        public DbSet<Connections> Connections { get; set; }
         public DbSet<Timeline> Timelines { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<Message>()
+                .HasOne<ApplicationUser>(m => m.Sender)
+                .WithMany(u => u.Messages)
+                .HasForeignKey(m => m.UserId);
+        }
     }
 }

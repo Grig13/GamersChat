@@ -5,14 +5,18 @@
 namespace GamersChat.Data.Migrations
 {
     /// <inheritdoc />
-#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
-    public partial class userdto : Migration
-#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
+    public partial class UpdateMessageTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-
+            migrationBuilder.AlterColumn<Guid>(
+                name: "Id",
+                table: "Messages",
+                type: "uniqueidentifier",
+                nullable: false,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(450)");
         }
 
         /// <inheritdoc />

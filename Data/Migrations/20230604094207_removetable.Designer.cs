@@ -4,6 +4,7 @@ using GamersChat.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamersChat.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230604094207_removetable")]
+#pragma warning disable CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
+    partial class removetable
+#pragma warning restore CS8981 // The type name only contains lower-cased ascii characters. Such names may become reserved for the language.
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,34 +293,6 @@ namespace GamersChat.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Connections");
-                });
-
-            modelBuilder.Entity("GamersChat.Models.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("GamersChat.Models.Product", b =>
@@ -601,17 +578,6 @@ namespace GamersChat.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("GamersChat.Models.Message", b =>
-                {
-                    b.HasOne("GamersChat.Models.ApplicationUser", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("GamersChat.Models.Product", b =>
                 {
                     b.HasOne("GamersChat.Models.ApplicationUser", "User")
@@ -696,8 +662,6 @@ namespace GamersChat.Data.Migrations
 
             modelBuilder.Entity("GamersChat.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("Messages");
-
                     b.Navigation("Posts");
 
                     b.Navigation("Products");

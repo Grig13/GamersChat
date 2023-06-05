@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
 
 namespace GamersChat.Areas.Identity.Pages.Account
 {
@@ -55,7 +56,10 @@ namespace GamersChat.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new InputModel();
+
+        [BindProperty]
+        public IFormFile ProfilePictureFile { get; set; }
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -75,40 +79,30 @@ namespace GamersChat.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
             public string ProfilePicture { get; set; }
-            public InputModel(IWebHostEnvironment hostingEnvironment)
+
+            public InputModel()
             {
                 ProfilePicture = "/assets/profile-placeholder.png";
-                ProfilePicture = Path.Combine(hostingEnvironment.ContentRootPath, ProfilePicture);
             }
         }
+
 
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -117,7 +111,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, [FromServices] IWebHostEnvironment hostingEnvironment = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -128,6 +122,21 @@ namespace GamersChat.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
+                if (ProfilePictureFile != null && ProfilePictureFile.Length > 0 && hostingEnvironment != null)
+                {
+                    // Logic to save the profile picture file
+                    // For example, you can generate a unique filename and save it to a specific location
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + ProfilePictureFile.FileName;
+                    var filePath = Path.Combine(hostingEnvironment.ContentRootPath, "ProfilePictures", uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProfilePictureFile.CopyToAsync(stream);
+                    }
+
+                    Input.ProfilePicture = uniqueFileName;
+                }
 
                 if (result.Succeeded)
                 {

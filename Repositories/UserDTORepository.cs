@@ -37,10 +37,10 @@ namespace GamersChat.Repositories
         {
             var attributesToReturn = _dbContext.Set<ApplicationUserDTO>().Where(p => p.UserId == userId).FirstOrDefault();
 
-            if (attributesToReturn == null)
-            {
-                throw new KeyNotFoundException("Attributes not found.");
-            }
+            //if (attributesToReturn == null)
+            //{
+            //    throw new KeyNotFoundException("Attributes not found.");
+            //}
 
             return attributesToReturn;
         }
