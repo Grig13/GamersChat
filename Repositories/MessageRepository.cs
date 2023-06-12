@@ -13,11 +13,10 @@ namespace GamersChat.Repositories
             _context = context;
         }
 
-        public void AddMessage(Message message)
+        public async Task AddMessage(Message message)
         {
-            message.Id = Guid.NewGuid();
             _context.Messages.Add(message);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public void EditMessage(Message message)
@@ -38,7 +37,9 @@ namespace GamersChat.Repositories
 
         public Message GetMessage(Guid messageId)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return _context.Messages.Find(messageId);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public IEnumerable<Message> GetAllMessages()

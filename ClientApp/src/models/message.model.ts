@@ -3,13 +3,10 @@ import { User } from "./user.model";
 
 export interface Message {
     id: string;
+    userName: string;
     content: string;
     timestamp: Date;
-    senderId: string;
-    sender: User;
-    receiverId: string;
-    receiver: User;
-    productId: string;
-    product: Product;
+    userId: string;
+    user: User;
   }
   

@@ -20,6 +20,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting.Internal;
+using System.Security.Claims;
 
 namespace GamersChat.Areas.Identity.Pages.Account
 {
@@ -50,65 +52,36 @@ namespace GamersChat.Areas.Identity.Pages.Account
             _hostingEnvironment = hostingEnvironment;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new InputModel();
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
-        public class InputModel
-        {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
-
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string Password { get; set; }
-
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
-            public string ProfilePicture { get; set; }
-            public InputModel(IWebHostEnvironment hostingEnvironment)
+            public class InputModel
             {
-                ProfilePicture = "/assets/profile-placeholder.png";
-                ProfilePicture = Path.Combine(hostingEnvironment.ContentRootPath, ProfilePicture);
+                [Required]
+                [EmailAddress]
+                [Display(Name = "Email")]
+                public string Email { get; set; }
+
+                [Required]
+                [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+                [DataType(DataType.Password)]
+                [Display(Name = "Password")]
+                public string Password { get; set; }
+
+                [DataType(DataType.Password)]
+                [Display(Name = "Confirm password")]
+                [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+                public string ConfirmPassword { get; set; }
+
+                public string ProfilePicture { get; set; }
+                public string FirstName { get; set; }
+                public string LastName { get; set; }
+                public string City { get; set; }
+                public int Age { get; set; }
             }
-        }
+
 
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -117,21 +90,42 @@ namespace GamersChat.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, [FromServices] IWebHostEnvironment hostingEnvironment = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                var user = new ApplicationUser
+                {
+                    UserName = Input.Email,
+                    ProfilePicture = Input.ProfilePicture,
+                    Age = Input.Age,
+                    City = Input.City,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName
+                };
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    var claims = new List<Claim>
+                    {
+                     new Claim("FirstName", user.FirstName),
+                        new Claim("LastName", user.LastName),
+                        new Claim("City", user.City),
+                        new Claim("Age", user.Age.ToString()),
+                        new Claim("ProfilePicture", user.ProfilePicture),
+                        new Claim("PhoneNumber", user.PhoneNumber)
+                    };
+
+                    // Assign the claims to the user
+                    await _userManager.AddClaimsAsync(user, claims);
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -165,6 +159,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
             return Page();
         }
 
+
         private ApplicationUser CreateUser()
         {
             try
@@ -178,6 +173,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
+
 
         private IUserEmailStore<ApplicationUser> GetEmailStore()
         {

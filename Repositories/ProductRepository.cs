@@ -51,7 +51,9 @@ namespace GamersChat.Repositories
 
         public Product GetProduct(Guid productId)
         {
+#pragma warning disable CS8603 // Possible null reference return.
             return _context.Products.Find(productId);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public IEnumerable<Product> GetAllProducts()

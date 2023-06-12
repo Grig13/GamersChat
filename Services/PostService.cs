@@ -5,51 +5,42 @@ namespace GamersChat.Services
 {
     public class PostService
     {
-        private readonly IPostRepository postRepository;
+        private readonly IPostRepository _postRepository;
 
         public PostService(IPostRepository postRepository)
         {
-            this.postRepository = postRepository;
+            _postRepository = postRepository;
+        }
+
+        public Post GetPostById(Guid id)
+        {
+            return _postRepository.GetPostById(id);
         }
 
         public IEnumerable<Post> GetAllPosts()
         {
-            return this.postRepository.GetAll();
+            return _postRepository.GetAllPosts();
         }
 
-        public Post GetPostById(Guid postId)
+        public IEnumerable<PostComment> GetCommentsForPost(Guid postId)
         {
-            return this.postRepository.GetById(postId);
+            return _postRepository.GetCommentsForPost(postId);
         }
 
-        public void AddPost(Post postToAdd)
+
+        public void CreatePost(Post post)
         {
-            this.postRepository.Add(postToAdd);
+            _postRepository.CreatePost(post);
         }
 
-        public Post AddCommentsToPost(Guid postId, List<PostComment> comments)
+        public void UpdatePost(Post post)
         {
-            return this.postRepository.AddCommentsToPost(postId, comments);
-        }
-
-        public Post AddCommentToPost(Guid postId, PostComment comment)
-        {
-            return this.postRepository.AddCommentToPost(postId, comment);
-        }
-
-        public Post UpdatePost(Post postToUpdate)
-        {
-            return this.postRepository.Update(postToUpdate);
-        }
-
-        public Post RemoveCommentFromPost(Guid postId, PostComment comment)
-        {
-            return this.postRepository.RemoveCommentFromPost(postId, comment);
+            _postRepository.UpdatePost(post);
         }
 
         public void DeletePost(Guid id)
         {
-            this.postRepository.DeleteById(id);
+            _postRepository.DeletePost(id);
         }
     }
 }

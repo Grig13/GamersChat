@@ -1,51 +1,38 @@
 ﻿using GamersChat.Data;
 using GamersChat.Repositories.Interfaces;
 using GamersChatAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GamersChat.Repositories
 {
     public class PostCommentRepository : IPostCommentRepository
     {
-        protected readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
         public PostCommentRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public void DeleteById(Guid id)
+        public PostComment GetCommentById(Guid id)
         {
-            var postCommentToBeDeleted = GetById(id);
-            _dbContext.Set<PostComment>().Remove(postCommentToBeDeleted);
+            return _dbContext.PostComments.Find(id);
+        }
+
+        public void CreateComment(PostComment comment)
+        {
+            _dbContext.PostComments.Add(comment);
             _dbContext.SaveChanges();
         }
 
-        public IEnumerable<PostComment> GetAll()
+        public void DeleteComment(Guid id) 
         {
-            return _dbContext.Set<PostComment>().ToList();
-        }
-
-        public void Add(PostComment commentToAdd)
-        {
-            _dbContext.PostComments.Add(commentToAdd);
-            _dbContext.SaveChanges();
-        }
-
-        public PostComment GetById(Guid id)
-        {
-            var postCommentToReturn = _dbContext.Set<PostComment>().Where(a => a.Id == id).FirstOrDefault();
-            if (postCommentToReturn == null)
+            var comment = _dbContext.PostComments.Find(id);
+            if(comment != null)
             {
-                throw new KeyNotFoundException("Post Comment not found.");
+                _dbContext.PostComments.Remove(comment);
+                _dbContext.SaveChanges();
             }
-            return postCommentToReturn;
-        }
-
-        public PostComment Update(PostComment commentToUpdate)
-        {
-            _dbContext.Set<PostComment>().Update(commentToUpdate);
-            _dbContext.SaveChanges();
-            return commentToUpdate;
         }
     }
 }

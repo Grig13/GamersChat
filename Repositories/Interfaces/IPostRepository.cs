@@ -4,13 +4,11 @@ namespace GamersChat.Repositories.Interfaces
 {
     public interface IPostRepository
     {
-        public IEnumerable<Post> GetAll();
-        public Post AddCommentsToPost(Guid postId, List<PostComment> comments);
-        public Post AddCommentToPost(Guid postId, PostComment commentToAdd);
-        public Post RemoveCommentFromPost(Guid postId, PostComment commentToRemove);
-        public void Add(Post postToAdd);
-        public void DeleteById(Guid id);
-        public Post Update(Post postToUpdate);
-        public Post GetById(Guid id);
+        public IEnumerable<Post> GetAllPosts();
+        public Post GetPostById(Guid id);
+        public IEnumerable<PostComment> GetCommentsForPost(Guid postId);
+        public void CreatePost(Post post);
+        public void UpdatePost(Post post);
+        public void DeletePost(Guid id);
     }
 }

@@ -12,11 +12,16 @@
         "nguniversal",
         "oidc",
         "prestart",
+        "primeflex",
         "primeicons",
         "primeng",
+        "signalr",
         "signin",
         "signout",
+        "Submiting",
         "textbox",
-        "weatherforecast"
+        "toastr",
+        "weatherforecast",
+        "xlarge"
     ]
 }

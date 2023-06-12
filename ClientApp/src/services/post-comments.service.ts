@@ -13,23 +13,15 @@ export class PostCommentsService {
 
   constructor(private httpClient: HttpClient) { }
 
-  public getPostComments(): Observable<PostComments[]>{
-    return this.httpClient.get<PostComments[]>(`${environment.apiUrl}/${this.url}`)
-  }
-
-  public getPostCommentsById(id: string): Observable<PostComments>{
+  public getCommentById(id: string): Observable<PostComments> {
     return this.httpClient.get<PostComments>(`${environment.apiUrl}/${this.url}/${id}`);
   }
 
-  public addPostComment(commentToAdd: PostComments): Observable<PostComments>{
+  public createComment(commentToAdd: PostComments): Observable<PostComments> {
     return this.httpClient.post<PostComments>(`${environment.apiUrl}/${this.url}`, commentToAdd);
   }
 
-  public editPostComment(id: string, newComment: PostComments): Observable<PostComments>{
-    return this.httpClient.patch<PostComments>(`${environment.apiUrl}/${this.url}${id}`, newComment);
-  }
-
-  public deletePostComment(id: string): Observable<PostComments>{
-    return this.httpClient.delete<PostComments>(`${environment.apiUrl}/${this.url}/${id}`);
+  public deleteComment(id: string): Observable<void> {
+    return this.httpClient.delete<void>(`${environment.apiUrl}/${this.url}/${id}`);
   }
 }

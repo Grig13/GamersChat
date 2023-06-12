@@ -7,14 +7,33 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using GamersChat.HubConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSignalR();
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllHeaders", builder =>
+    {        builder.WithOrigins()
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+               .AllowCredentials();
+               
+    });
+});
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+//builder.Services.AddDbContextPool<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -30,9 +49,6 @@ builder.Services.AddAuthentication()
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<NewsService>();
 
-builder.Services.AddScoped<IUserDTORepository, UserDTORepository>();
-builder.Services.AddScoped<UserDTOService>();
-
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<PostCommentService>();
 
@@ -45,11 +61,10 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<MessageService>();
 
-builder.Services.AddScoped<ITimelineRepository, TimelineRepository>();
-builder.Services.AddScoped<TimelineService>();
+builder.Services.AddScoped<IUserAttributesRepository, UserAttributesRepository>();
+builder.Services.AddScoped<UserAttributesService>();
 
-builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-builder.Services.AddScoped<ApplicationUserService>();
+
 
 
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
@@ -58,15 +73,9 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowOrigin", builder =>
-    {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
-    });
-});
+
+
+
 
 
 builder.Services.AddControllersWithViews();
@@ -87,10 +96,12 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+app.UseCors("AllowAllHeaders");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
 
 app.UseAuthentication();
 app.UseIdentityServer();
@@ -101,6 +112,18 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 app.MapRazorPages();
 
+#pragma warning disable ASP0014 // Suggest using top level route registrations
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    
+});
+
+
+#pragma warning restore ASP0014 // Suggest using top level route registrations
+
 app.MapFallbackToFile("index.html");
+
+app.MapHub<ChatHub>("/chat");
 
 app.Run();

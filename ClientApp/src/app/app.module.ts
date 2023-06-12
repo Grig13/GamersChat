@@ -32,6 +32,11 @@ import { ProductDetailsComponent } from './product-details/product-details.compo
 import { GalleriaModule } from 'primeng/galleria';
 import { ImageModule } from 'primeng/image';
 import { ChipModule } from 'primeng/chip';
+import { ToastrModule } from 'ngx-toastr';
+import { MessageTabComponent } from './message-tab/message-tab.component';
+import { ChipsModule } from 'primeng/chips';
+import { AvatarModule } from 'primeng/avatar';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +47,8 @@ import { ChipModule } from 'primeng/chip';
     FetchDataComponent,
     NewsComponent,
     StoreComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    MessageTabComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -56,11 +62,13 @@ import { ChipModule } from 'primeng/chip';
     DataViewModule,
     DropdownModule,
     FormsModule,
+    ChipsModule,
     RatingModule,
     TagModule,
     ToastModule,
     GalleriaModule,
     ImageModule,
+    AvatarModule,
     ConfirmDialogModule,
     TableModule,
     ChipModule,
@@ -68,6 +76,12 @@ import { ChipModule } from 'primeng/chip';
     BrowserAnimationsModule,
     NoopAnimationsModule,
     ApiAuthorizationModule,
+    ToastrModule.forRoot({
+      enableHtml: true,
+      timeOut: 10000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: false,
+    }),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },

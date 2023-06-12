@@ -1,10 +1,10 @@
+import { UserDTO } from "./UserDTO.model";
 import { PostComments } from "./post-comments.model";
 
 export class Post{
-    id!: string;
-    postContent!: string;
-    postImage?: string;
+    id?: string;
+    content!: string;
     userId!: string;
-    timelineId?: string;
+    user?: UserDTO;
     comments?: PostComments[];
 }

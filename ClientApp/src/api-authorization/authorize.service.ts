@@ -30,8 +30,13 @@ export enum AuthenticationResultStatus {
 }
 
 export interface IUser {
+  id?: string;
   name?: string;
   profilePicture?: string;
+  firstName?: string;
+  lastName?: string;
+  age?: number;
+  city?: string;
 }
 
 @Injectable({

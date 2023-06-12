@@ -1,86 +1,57 @@
 ﻿using GamersChat.Data;
 using GamersChat.Repositories.Interfaces;
 using GamersChatAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace GamersChat.Repositories
 {
     public class PostRepository : IPostRepository
     {
-        protected readonly ApplicationDbContext _dbContext;
+        private readonly ApplicationDbContext _dbContext;
 
         public PostRepository(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public Post AddCommentsToPost(Guid postId, List<PostComment> comments)
+        public IEnumerable<Post> GetAllPosts()
         {
-            var post = GetById(postId);
-            foreach (var comment in comments)
+            return _dbContext.Posts.Include(p => p.Comments).ToList();
+        }
+
+        public Post GetPostById(Guid id)
+        {
+            return _dbContext.Posts
+                .Include(p => p.Comments)
+                .SingleOrDefault(p => p.Id == id);
+        }
+
+        public IEnumerable<PostComment> GetCommentsForPost(Guid postId)
+        {
+            return _dbContext.PostComments.Where(c => c.PostId == postId).ToList();
+        }
+
+        public void CreatePost(Post post)
+        {
+            post.Id = Guid.NewGuid();
+            _dbContext.Posts.Add(post);
+            _dbContext.SaveChanges();
+        }
+
+        public void UpdatePost(Post post)
+        {
+            _dbContext.Entry(post).State= EntityState.Modified;
+            _dbContext.SaveChanges();
+        }
+
+        public void DeletePost(Guid id)
+        {
+            var post = _dbContext.Posts.Find(id);
+            if (post != null)
             {
-                post.PostComments.Add(comment);
+                _dbContext.Posts.Remove(post);
+                _dbContext.SaveChanges();
             }
-            _dbContext.SaveChanges();
-            return post;
-        }
-
-        public void Add(Post postToAdd)
-        {
-            _dbContext.Posts.Add(postToAdd);
-            _dbContext.SaveChanges();
-        }
-
-        public Post AddCommentToPost(Guid postId, PostComment commentToAdd)
-        {
-            var post = GetById(postId);
-            if (post == null)
-            {
-                throw new ArgumentException("Cart with given Id not found", nameof(postId));
-            }
-            if (post.PostComments == null)
-            {
-                post.PostComments = new List<PostComment>();
-            }
-            post.PostComments.Add(commentToAdd);
-            this._dbContext.SaveChanges();
-            return post;
-        }
-
-        public void DeleteById(Guid id)
-        {
-            var post = GetById(id);
-            _dbContext.Set<Post>().Remove(post);
-            _dbContext.SaveChanges();
-        }
-
-        public IEnumerable<Post> GetAll()
-        {
-            return _dbContext.Set<Post>().ToList();
-        }
-
-        public Post GetById(Guid id)
-        {
-            var postToReturn = _dbContext.Set<Post>().Where(a => a.Id == id).FirstOrDefault();
-            if (postToReturn == null)
-            {
-                throw new KeyNotFoundException("Post not found.");
-            }
-            return postToReturn;
-        }
-
-        public Post RemoveCommentFromPost(Guid postId, PostComment commentToRemove)
-        {
-            var post = GetById(postId);
-            post.PostComments.Remove(commentToRemove);
-            _dbContext.SaveChanges();
-            return post;
-        }
-
-        public Post Update(Post postToUpdate)
-        {
-            _dbContext.Set<Post>().Update(postToUpdate);
-            _dbContext.SaveChanges();
-            return postToUpdate;
         }
     }
 }

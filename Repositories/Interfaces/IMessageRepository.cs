@@ -8,6 +8,6 @@ namespace GamersChat.Repositories.Interfaces
         Message GetMessage(Guid messageId);
         void DeleteMessage(Guid messageId);
         void EditMessage(Message message);
-        void AddMessage(Message message);
+        Task AddMessage(Message message);
     }
 }

@@ -1,53 +1,46 @@
 ﻿using GamersChat.Services;
 using GamersChatAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GamersChat.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [EnableCors("AllowOrigin")]
     public class PostCommentController : ControllerBase
     {
-        private readonly PostCommentService _pcService;
+        private readonly PostCommentService _postCommentService;
 
-        public PostCommentController(PostCommentService pcService)
+        public PostCommentController(PostCommentService postCommentService)
         {
-            _pcService = pcService;
-        }
-
-        [HttpGet]
-        public IEnumerable<PostComment> Get()
-        {
-            return this._pcService.GetAllComments();
+            _postCommentService = postCommentService;
         }
 
         [HttpGet("{id}")]
-        public PostComment GetComment(Guid id)
+        public ActionResult<PostComment> GetComment(Guid id)
         {
-            return this._pcService.GetCommentById(id);
+            var comment = _postCommentService.GetCommentById(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return comment;
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] PostComment postComment)
+        public ActionResult<PostComment> CreateComment([FromBody] PostComment comment)
         {
-            _pcService.AddComment(postComment);
-            return CreatedAtAction(nameof(GetComment), new { id = postComment.Id }, postComment);
-        }
-
-        [HttpPut]
-        public PostComment Update(Guid id, [FromBody] PostComment comment)
-        {
-            var commentToEdit = _pcService.GetCommentById(id);
-            commentToEdit.CommentContent = comment.CommentContent;
-            return this._pcService.UpdateComment(commentToEdit);
+            _postCommentService.CreateComment(comment);
+            return CreatedAtAction(nameof(GetComment), new { id = comment.Id }, comment);
         }
 
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public IActionResult DeleteComment(Guid id)
         {
-            this._pcService.DeleteComment(id);
+            _postCommentService.DeleteComment(id);
+            return NoContent();
         }
     }
 }

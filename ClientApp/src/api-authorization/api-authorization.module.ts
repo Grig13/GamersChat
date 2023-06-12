@@ -6,11 +6,13 @@ import { LogoutComponent } from './logout/logout.component';
 import { RouterModule } from '@angular/router';
 import { ApplicationPaths } from './api-authorization.constants';
 import { HttpClientModule } from '@angular/common/http';
+import { AvatarModule } from 'primeng/avatar';
 
 @NgModule({
   imports: [
     CommonModule,
     HttpClientModule,
+    AvatarModule,
     RouterModule.forChild(
       [
         { path: ApplicationPaths.Register, component: LoginComponent },
