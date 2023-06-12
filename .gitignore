@@ -229,3 +229,5 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+/ClientApp/.angular/cache/14.2.11/angular-webpack
+/ClientApp/.angular/cache/14.2.11/babel-webpack
