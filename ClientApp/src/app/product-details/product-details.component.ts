@@ -59,7 +59,6 @@ export class ProductDetailsComponent implements OnInit {
         this.product = product;
         this.productUserId = product.userId;
         console.log(this.productUserId);
-        this.httpGetUserAttributes();
       },
       error: (response) => {
         console.log(response);
@@ -78,16 +77,6 @@ export class ProductDetailsComponent implements OnInit {
     })
   }
 
-  httpGetUserAttributes(): void{
-    this.userAttributesService.getAttributes(this.productUserId).subscribe({
-      next: (attributes: UserDTO) => {
-        this.userAttributes = attributes;
-      },
-      error: (response) => {
-        console.log(response);
-      }
-    });
-  }
 
   openMessageTab(): void {
     this.showMessageTab = !this.showMessageTab;

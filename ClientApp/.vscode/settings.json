@@ -18,8 +18,10 @@
         "signalr",
         "signin",
         "signout",
+        "Submiting",
         "textbox",
         "toastr",
-        "weatherforecast"
+        "weatherforecast",
+        "xlarge"
     ]
 }

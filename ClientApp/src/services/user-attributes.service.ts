@@ -9,19 +9,16 @@ import { UserDTO } from 'src/models/UserDTO.model';
 })
 export class UserAttributesService {
 
-  private readonly url = "UserAttributes";
+  private readonly url = "User";
 
   constructor(private httpClient: HttpClient) { }
 
-  public getAttributes(userId: string): Observable<UserDTO>{
+  public getLoggedInUserData(): Observable<UserDTO>{
+    return this.httpClient.get<UserDTO>(`${environment.apiUrl}/${this.url}`);
+  }
+
+  public getUserAttributesById(userId: string): Observable<UserDTO> {
     return this.httpClient.get<UserDTO>(`${environment.apiUrl}/${this.url}/${userId}`);
   }
 
-  public setAttributes(attributes: UserDTO): Observable<UserDTO>{
-    return this.httpClient.post<UserDTO>(`${environment.apiUrl}/${this.url}`, attributes);
-  }
-
-  public updateAttributes(userId: string, attributes: UserDTO): Observable<UserDTO>{
-    return this.httpClient.patch<UserDTO>(`${environment.apiUrl}/{this.url}/${userId}`, attributes);
-  }
 }

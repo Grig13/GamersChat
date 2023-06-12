@@ -19,8 +19,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllHeaders", builder =>
-    {
-        builder.WithOrigins("https://localhost:44420", "http://localhost:55505", "https://localhost:7143", "http://localhost:5234")
+    {        builder.WithOrigins()
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
@@ -50,9 +49,6 @@ builder.Services.AddAuthentication()
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<NewsService>();
 
-builder.Services.AddScoped<IUserDTORepository, UserDTORepository>();
-builder.Services.AddScoped<UserDTOService>();
-
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<PostCommentService>();
 
@@ -65,11 +61,10 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<MessageService>();
 
-builder.Services.AddScoped<ITimelineRepository, TimelineRepository>();
-builder.Services.AddScoped<TimelineService>();
+builder.Services.AddScoped<IUserAttributesRepository, UserAttributesRepository>();
+builder.Services.AddScoped<UserAttributesService>();
 
-builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
-builder.Services.AddScoped<ApplicationUserService>();
+
 
 
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>

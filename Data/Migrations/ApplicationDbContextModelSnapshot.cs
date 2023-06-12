@@ -171,6 +171,13 @@ namespace GamersChat.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -186,9 +193,11 @@ namespace GamersChat.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -215,6 +224,7 @@ namespace GamersChat.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ProfilePicture")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
@@ -242,11 +252,17 @@ namespace GamersChat.Data.Migrations
 
             modelBuilder.Entity("GamersChat.Models.ApplicationUserDTO", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("Description")
+                    b.Property<int>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -258,14 +274,11 @@ namespace GamersChat.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfilePicture")
+                    b.Property<string>("ProfileImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
+                    b.HasKey("UserId");
 
                     b.ToTable("ApplicationUsersDTO");
                 });
@@ -297,18 +310,15 @@ namespace GamersChat.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Content")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -405,27 +415,17 @@ namespace GamersChat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PostContent")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PostImage")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("TimelineId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("TimelineId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -436,32 +436,24 @@ namespace GamersChat.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("CommentContent")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
 
+                    b.HasIndex("userId");
+
                     b.ToTable("PostComments");
-                });
-
-            modelBuilder.Entity("GamersChatAPI.Models.Timeline", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Timelines");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -605,9 +597,7 @@ namespace GamersChat.Data.Migrations
                 {
                     b.HasOne("GamersChat.Models.ApplicationUser", "Sender")
                         .WithMany("Messages")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Sender");
                 });
@@ -623,24 +613,32 @@ namespace GamersChat.Data.Migrations
 
             modelBuilder.Entity("GamersChatAPI.Models.Post", b =>
                 {
-                    b.HasOne("GamersChat.Models.ApplicationUser", null)
+                    b.HasOne("GamersChat.Models.ApplicationUser", "User")
                         .WithMany("Posts")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("GamersChatAPI.Models.Timeline", "Timeline")
-                        .WithMany("Posts")
-                        .HasForeignKey("TimelineId");
-
-                    b.Navigation("Timeline");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("GamersChatAPI.Models.PostComment", b =>
                 {
                     b.HasOne("GamersChatAPI.Models.Post", "Post")
-                        .WithMany("PostComments")
-                        .HasForeignKey("PostId");
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GamersChat.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Post");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -705,12 +703,7 @@ namespace GamersChat.Data.Migrations
 
             modelBuilder.Entity("GamersChatAPI.Models.Post", b =>
                 {
-                    b.Navigation("PostComments");
-                });
-
-            modelBuilder.Entity("GamersChatAPI.Models.Timeline", b =>
-                {
-                    b.Navigation("Posts");
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

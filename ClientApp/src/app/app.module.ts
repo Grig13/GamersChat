@@ -35,6 +35,7 @@ import { ChipModule } from 'primeng/chip';
 import { ToastrModule } from 'ngx-toastr';
 import { MessageTabComponent } from './message-tab/message-tab.component';
 import { ChipsModule } from 'primeng/chips';
+import { AvatarModule } from 'primeng/avatar';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import { ChipsModule } from 'primeng/chips';
     ToastModule,
     GalleriaModule,
     ImageModule,
+    AvatarModule,
     ConfirmDialogModule,
     TableModule,
     ChipModule,

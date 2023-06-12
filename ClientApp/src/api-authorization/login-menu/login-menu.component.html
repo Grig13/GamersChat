@@ -1,14 +1,24 @@
+
 <ul class="navbar-nav" *ngIf="isAuthenticated | async; else loggedOutNavbar">
-    <li class="nav-item dropdown" (click)="toggleDropdown()">
+  <li class="nav-item dropdown" (click)="toggleDropdown()">
+    <div *ngIf="userProfilePicture; else defaultProfilePicture">
       <a class="nav-link dropdown-toggle" role="button">
-        <img src="{{ userProfilePicture | async }}" alt="Profile Picture" class="rounded-circle profile-image">
+        <p-avatar image="{{ userProfilePicture }}" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
       </a>
-      <div class="dropdown-menu dropdown-menu-right" *ngIf="isDropdownOpen == true">
-        <a class="dropdown-item profile-button" routerLink="/authentication/profile">Profile</a>
-        <a class="dropdown-item nav-link text-dark logout-button" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">Logout</a>
-      </div>
-    </li>
-  </ul>
+    </div>
+    <ng-template #defaultProfilePicture>
+      <a>
+        <a class="nav-link dropdown-toggle" role="button">
+          <p-avatar image="{{ defaultProfilePicture }}" styleClass="mr-2" size="xlarge" shape="circle"></p-avatar>
+        </a>
+      </a>
+    </ng-template>
+    <div class="dropdown-menu dropdown-menu-right" *ngIf="isDropdownOpen == true">
+      <a class="dropdown-item profile-button" routerLink="/authentication/profile">Profile</a>
+      <a class="dropdown-item nav-link text-dark logout-button" [routerLink]='["/authentication/logout"]' [state]='{ local: true }' title="Logout">Logout</a>
+    </div>
+  </li>
+</ul>
   
 <ng-template #loggedOutNavbar>
     <ul class="navbar-nav">

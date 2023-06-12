@@ -5,36 +5,26 @@ namespace GamersChat.Services
 {
     public class PostCommentService
     {
-        private readonly IPostCommentRepository pcRepository;
+        private readonly IPostCommentRepository _postCommentRepository;
 
-        public PostCommentService(IPostCommentRepository pcRepository)
+        public PostCommentService(IPostCommentRepository postCommentRepository)
         {
-            this.pcRepository = pcRepository;
+            _postCommentRepository = postCommentRepository;
         }
 
-        public IEnumerable<PostComment> GetAllComments()
+        public PostComment GetCommentById(Guid id)
         {
-            return this.pcRepository.GetAll();
+            return _postCommentRepository.GetCommentById(id);
         }
 
-        public PostComment GetCommentById(Guid postId)
+        public void CreateComment(PostComment comment)
         {
-            return this.pcRepository.GetById(postId);
+            _postCommentRepository.CreateComment(comment);
         }
 
-        public void AddComment(PostComment commentToAdd)
+        public void DeleteComment(Guid id)
         {
-            this.pcRepository.Add(commentToAdd);
-        }
-
-        public PostComment UpdateComment(PostComment commentToUpdate)
-        {
-            return this.pcRepository.Update(commentToUpdate);
-        }
-
-        public void DeleteComment(Guid commentId)
-        {
-            this.pcRepository.DeleteById(commentId);
+            _postCommentRepository.DeleteComment(id);
         }
     }
 }
