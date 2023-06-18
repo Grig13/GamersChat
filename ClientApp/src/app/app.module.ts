@@ -15,7 +15,7 @@ import { ApiAuthorizationModule } from 'src/api-authorization/api-authorization.
 import { AuthorizeGuard } from 'src/api-authorization/authorize.guard';
 import { AuthorizeInterceptor } from 'src/api-authorization/authorize.interceptor';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { DataViewModule } from 'primeng/dataview';
 import { RatingModule } from 'primeng/rating';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -72,6 +72,7 @@ import { UserProfileComponent } from './user-profile/user-profile/user-profile.c
     ConfirmDialogModule,
     TableModule,
     ChipModule,
+    ToastModule,
     ToolbarModule,
     BrowserAnimationsModule,
     NoopAnimationsModule,
@@ -92,7 +93,7 @@ import { UserProfileComponent } from './user-profile/user-profile/user-profile.c
     ])
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }, DataViewLayoutOptions
+    { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }, DataViewLayoutOptions, MessageService,
   ],
   bootstrap: [AppComponent]
 })
