@@ -1,4 +1,3 @@
-import { Message } from "./message.model";
 import { Post } from "./post.model";
 import { Product } from "./product.model";
 
@@ -10,7 +9,7 @@ export interface UserDTO {
   lastName: string;
   age: number;
   city: string;
-  messages?: Message[];
+  connectionId?: string;
   posts?: Post[];
   products?: Product[];
 }

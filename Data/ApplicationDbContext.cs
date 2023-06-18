@@ -28,7 +28,7 @@ namespace GamersChat.Data
             base.OnModelCreating(builder);
 
             builder.Entity<Message>()
-                .HasOne<ApplicationUser>(m => m.Sender)
+                .HasOne<ApplicationUser>(m => m.User)
                 .WithMany(u => u.Messages)
                 .HasForeignKey(m => m.UserId);
         }

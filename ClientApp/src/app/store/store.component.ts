@@ -5,6 +5,8 @@ import { Product } from '../../models/product.model';
 import { AuthorizeService } from '../../api-authorization/authorize.service';
 import { ProductService } from '../../services/product.service';
 import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
+import { UserDTO } from 'src/models/UserDTO.model';
+import { UserAttributesService } from 'src/services/user-attributes.service';
 
 @Component({
   selector: 'app-store',
@@ -17,7 +19,8 @@ export class StoreComponent implements OnInit {
   productList!: Observable<Product[]>;
   selectedProduct: Product | null = null;
 
-  userId2: string | null = null;
+  user!: UserDTO;
+  userId2?: string | null;
 
   product: Product | undefined;
 
@@ -63,15 +66,21 @@ export class StoreComponent implements OnInit {
     private productService: ProductService,
     private authService: AuthorizeService,
     private messageService: MessageService, 
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private userAttributesService: UserAttributesService
     ) { }
 
   ngOnInit(): void {
     this.refreshStorePage();
     this.authService.getUserId().subscribe((userId: string | null) => {
       this.userId2 = userId;
-      console.log(this.userId2);
     })
+    if(this.userId2){
+      this.userAttributesService.getUserAttributesById(this.userId2).subscribe((user) => {
+        this.user = user;
+      });
+    }
+    console.log(this.user);
   }
 
   showDialog() {
@@ -172,7 +181,7 @@ export class StoreComponent implements OnInit {
             city: this.addProductForm.controls.city.value!,
             phoneNumber: this.addProductForm.controls.phoneNumber.value!,
             email: this.addProductForm.controls.email.value!,
-            userId: userId
+            userId: userId,
           };
   
           this.productService.addProduct(newProduct).subscribe(

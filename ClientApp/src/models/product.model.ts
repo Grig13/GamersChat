@@ -1,4 +1,4 @@
-import { User } from "./user.model";
+import { UserDTO } from "./UserDTO.model";
 
 export interface Product {
     id?: string;
@@ -14,7 +14,7 @@ export interface Product {
     email: string;
     createdDate?: Date;
     userId?: string;
-    user?: User;
+    user?: UserDTO;
   }
   
   

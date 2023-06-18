@@ -3,7 +3,6 @@ import * as signalR from '@aspnet/signalr';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { take } from 'rxjs';
 import { AuthorizeService, IUser } from 'src/api-authorization/authorize.service';
-import { Message } from 'src/models/message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,11 +32,11 @@ export class SignalrService {
     return this.hubConnection.stop();
   }
 
-  onReceiveMessage(callback: (message: Message) => void): void {
+  onReceiveMessage(callback: (user: string, message: string) => void): void {
     this.hubConnection.on('ReceiveMessage', callback);
   }
 
-  sendMessage(userId: string, recipientId: string, messageContent: string): Promise<void> {
-    return this.hubConnection.invoke('SendMessage', userId, recipientId, messageContent);
+  sendMessage(message: string): Promise<void> {
+    return this.hubConnection.invoke('SendMessage', message);
   }
 }

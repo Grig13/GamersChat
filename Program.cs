@@ -19,7 +19,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllHeaders", builder =>
-    {        builder.WithOrigins()
+    {
+        builder.WithOrigins()
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials();
@@ -35,7 +36,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddIdentityServer()
@@ -64,7 +65,7 @@ builder.Services.AddScoped<MessageService>();
 builder.Services.AddScoped<IUserAttributesRepository, UserAttributesRepository>();
 builder.Services.AddScoped<UserAttributesService>();
 
-
+builder.Services.AddSingleton<ConnectionManager>();
 
 
 builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
@@ -72,11 +73,6 @@ builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
 );
 
 builder.Services.AddControllers();
-
-
-
-
-
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
@@ -102,9 +98,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-
-app.UseAuthentication();
 app.UseIdentityServer();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

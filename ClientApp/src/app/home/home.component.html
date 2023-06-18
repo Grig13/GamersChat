@@ -1,12 +1,14 @@
-  <div [formGroup]="addPostForm">
-    <p-dialog header="Create a post" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
-      <textarea formControlName="postContent" pInputTextarea id="float-input" rows="5" cols="50"></textarea>
-      <input formControlName="postImage" style="width: 400px;" pInputText />
-      <div class="buttons-container">
-        <button pButton pRipple type="submit" label="Submit"  (click)="httpAddPosts()"
-            class="modal-button btn-pos p-button-success"></button>
-      </div>
-    </p-dialog> 
+<div class="home-container">
+  <div class="add-post-container">
+    <div  [formGroup]="addPostForm">
+      <p-dialog header="Create a post" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+        <textarea formControlName="postContent" pInputTextarea id="float-input" rows="5" cols="50"></textarea>
+        <div class="buttons-container">
+          <button pButton pRipple type="submit" label="Submit"  (click)="httpAddPosts()"
+              class="modal-button btn-pos p-button-success"></button>
+        </div>
+      </p-dialog> 
+    </div>
   </div>
 
 
@@ -30,36 +32,73 @@
 
 
 
-<div class="posts-container" *ngFor="let post of posts">
-  <div class="post-container">
-    <div class="user-details-container">
-      <div *ngIf="post.user?.profileImageUrl; else profilePictureDefault" class="user-profile-image">
-        <p-avatar image="{{ post.user?.profileImageUrl }}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
-      </div> 
-      <div class="name-container">
-        {{post.user?.firstName}} {{ post.user?.lastName}}
-      </div>
-    </div>
-    <div class="post-content-container">{{post.content}}</div>
-
-    <div class="write-something-container">
-      <div *ngIf="userProfilePicture$; else profilePictureDefault">
-        <p-avatar image="{{ userProfilePicture$ }}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
-      </div>
-      <div [formGroup]="addCommentForm" class="text-area-container">
-        <span class="p-float-label">
-          <input style="width: 400px;" formControlName="content"  [disabled]="visible" pInputText id="write-post" />
-          <label htmlFor="write-post">Write a comment</label>
-        </span>
-      </div>
-    </div> 
-
-    <div class="comment-container" *ngFor="let comment of post.comments">
+  <div class="posts-container" *ngFor="let post of posts">
+    <div class="post-container">
       <div class="user-details-container">
-        <div>{{ comment.user?.firstName }} {{ comment.user?.lastName }}</div>
-        <p-avatar image="{{ comment.user?.profileImageUrl }}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+        <div *ngIf="post.user?.profileImageUrl; else profilePictureDefault" class="user-profile-image">
+          <p-avatar image="{{ post.user?.profileImageUrl }}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+        </div> 
+        <div class="name-container">
+          <a [routerLink]="['/profile', post.user?.userId]">
+            {{post.user?.firstName}} {{ post.user?.lastName}}
+          </a>
+        </div>
+        <div>
+            <div *ngIf="userDetails.email === 'admin@admin.com' || post.userId === userDetails.userId" title="Delete Post" class="delete-post-button card-button pi pi-trash" (click)="showDeleteDialog(post)"></div>
+        </div>
       </div>
-      <div>{{ comment.content }}</div>
+      <div class="post-content-container">{{post.content}}</div>
+
+      <div class="write-something-container">
+        <div *ngIf="userProfilePicture$; else profilePictureDefault">
+          <p-avatar image="{{ userProfilePicture$ }}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+        </div>
+        <div [formGroup]="addCommentForm" class="text-area-container">
+          <span class="p-float-label">
+            <input style="width: 400px;" formControlName="content"  [disabled]="visible" pInputText id="write-post" />
+            <label htmlFor="write-post">Write a comment</label>
+          </span>
+          <button (click)="addComment(post.id)" pButton icon="pi pi-send" class="md:align-self-end mb-2 p-button-rounded post-comment-button"></button>
+        </div>
+      </div> 
+
+      <div class="comment-container" *ngFor="let comment of post.comments">
+        <div class="com-container">
+          <div class="user-comment-details-container">
+            <p-avatar image="{{ comment.user?.profileImageUrl }}" styleClass="mr-2" size="large" shape="circle"></p-avatar>
+            <div class="name-container">
+              <a [routerLink]="['/profile', comment.userId]">
+                {{ comment.user?.firstName }} {{ comment.user?.lastName }}
+              </a>
+            </div>
+            <div *ngIf="comment.user?.email == 'admin@admin.com' || comment.user?.userId == comment.userId || post.userId == userDetails.userId" title="Delete Comment" class="delete-comment-button card-button pi pi-trash" (click)="post.id && comment.id && deleteComment(post.id, comment.id)"></div>
+          </div>
+          <div class="comment-content-container">
+            {{ comment.content }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+
+
+
+  <!-- =============================CONFIRMATION DELETE DIALOGUE================================= -->
+
+  <p-dialog [(visible)]="displayConfirmationDialog" [modal]="true" [style]="{width: '550px'}"
+      [draggable]="false" [resizable]="false">
+      <div class="confirm-dialogue">
+        <i class="confirm-icon pi pi-times-circle"></i>
+        <h3 class="confirm-header">Are you sure?</h3>
+        <p class="confirm-text m-0">
+          Do you really want to delete this news? This process cannot be
+          undone.
+        </p>
+        <div class="confirm-buttons-dialogue">
+          <button style="width: 75px" pButton type="button" label="Cancel" class="p-button-danger" (click)="hideDeleteDialog()"></button>
+          <button style="width: 75px" pButton type="button" label="Delete" class="p-button-success" (click)="deletePost(postIdToDelete)"></button>
+        </div>
+      </div>
+  </p-dialog>
+
 </div>

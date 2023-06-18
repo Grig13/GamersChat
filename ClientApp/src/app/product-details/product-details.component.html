@@ -16,20 +16,6 @@
                     <div>{{product.price | currency:'RON '}}</div>
                 </div>
             </div>
-            <div *ngIf="userAttributes; else noUser" class="card seller-info-container">
-                <div class="profile-image">placeholder</div>
-                <div class="name">placeholder</div>
-                <div class="last-name">placeholder</div>
-                <p-chip label="{{product.city}}"></p-chip>
-                
-            </div>
-            <p-button (click)="openMessageTab()" label="Message"></p-button>
-            <app-message-tab *ngIf="showMessageTab" ></app-message-tab>
-            <ng-template #noUser>
-                <div>
-                    This user has made his personal information private! You can contact him only by email or phone number!
-                </div>
-            </ng-template>
         </div>
     </div>
     <div class="product-description-container">

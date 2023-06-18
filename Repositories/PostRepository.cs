@@ -49,6 +49,9 @@ namespace GamersChat.Repositories
             var post = _dbContext.Posts.Find(id);
             if (post != null)
             {
+                var comments = _dbContext.PostComments.Where(c => c.PostId == id);
+                _dbContext.PostComments.RemoveRange(comments);
+
                 _dbContext.Posts.Remove(post);
                 _dbContext.SaveChanges();
             }

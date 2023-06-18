@@ -32,24 +32,18 @@ namespace GamersChat.Areas.Identity.Pages.Account
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
-        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender,
-            IWebHostEnvironment hostingEnvironment)
+            ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
-            _hostingEnvironment = hostingEnvironment;
         }
 
         [BindProperty]
@@ -90,7 +84,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null, [FromServices] IWebHostEnvironment hostingEnvironment = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -98,6 +92,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
             {
                 var user = new ApplicationUser
                 {
+                    Email = Input.Email,
                     UserName = Input.Email,
                     ProfilePicture = Input.ProfilePicture,
                     Age = Input.Age,
@@ -106,7 +101,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
                     LastName = Input.LastName
                 };
 
-                
+                _logger.LogInformation("User object created. FirstName: {FirstName}", user.FirstName);
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -116,39 +111,24 @@ namespace GamersChat.Areas.Identity.Pages.Account
 
                     var claims = new List<Claim>
                     {
-                     new Claim("FirstName", user.FirstName),
-                        new Claim("LastName", user.LastName),
-                        new Claim("City", user.City),
-                        new Claim("Age", user.Age.ToString()),
-                        new Claim("ProfilePicture", user.ProfilePicture),
-                        new Claim("PhoneNumber", user.PhoneNumber)
+                            new Claim("UserName", user.Email),
+                            new Claim("NormalizedEmail", user.NormalizedEmail),
+                            new Claim("FirstName", user.FirstName),
+                            new Claim("LastName", user.LastName),
+                            new Claim("City", user.City),
+                            new Claim("Age", user.Age.ToString()),
+                            new Claim("ProfilePicture", user.ProfilePicture)
                     };
 
                     // Assign the claims to the user
                     await _userManager.AddClaimsAsync(user, claims);
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                    await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
+                    // Redirect to the desired page after successful registration
+                    return LocalRedirect("/Identity/Account/Login");
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -158,6 +138,7 @@ namespace GamersChat.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
 
 
         private ApplicationUser CreateUser()

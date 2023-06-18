@@ -33,9 +33,9 @@ import { GalleriaModule } from 'primeng/galleria';
 import { ImageModule } from 'primeng/image';
 import { ChipModule } from 'primeng/chip';
 import { ToastrModule } from 'ngx-toastr';
-import { MessageTabComponent } from './message-tab/message-tab.component';
 import { ChipsModule } from 'primeng/chips';
 import { AvatarModule } from 'primeng/avatar';
+import { UserProfileComponent } from './user-profile/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -48,7 +48,7 @@ import { AvatarModule } from 'primeng/avatar';
     NewsComponent,
     StoreComponent,
     ProductDetailsComponent,
-    MessageTabComponent,
+    UserProfileComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -87,7 +87,8 @@ import { AvatarModule } from 'primeng/avatar';
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
       { path: 'news', component: NewsComponent, canActivate: [AuthorizeGuard] },
       { path: 'store', component: StoreComponent, canActivate: [AuthorizeGuard]},
-      { path: 'store/details/:id', component: ProductDetailsComponent, canActivate: [AuthorizeGuard]}
+      { path: 'store/details/:id', component: ProductDetailsComponent, canActivate: [AuthorizeGuard]},
+      { path: 'profile/:id', component: UserProfileComponent, canActivate: [AuthorizeGuard] },
     ])
   ],
   providers: [

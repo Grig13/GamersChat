@@ -1,3 +1,154 @@
+
+body::-webkit-scrollbar,.textbox::-webkit-scrollbar {
+    width: 7px;
+}
+
+body::-webkit-scrollbar-track, .textbox::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+body::-webkit-scrollbar-thumb, .textbox::-webkit-scrollbar-thumb {
+    background-color: #081114;
+    border: 1px solid #C5C5C5;
+}
+
+.home-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.add-button-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2%;
+}
+
+.modal-button{
+    width: 120px;
+    height: 50px;
+}
+
+.p-button-help,
+.button{
+    padding: 5px;
+}
+
+.btn-pos{
+    margin-left: 10px;
+    padding: 5px;
+    padding-right: 10px;
+    width: 90px;
+    height: 50px;
+}
+
+.buttons-container{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+}
+
+.card-container{
+    width: 1200px;
+    display: inline-block;
+    margin: 0 auto;
+    margin-bottom: 2%;
+}
+
+.card-button{
+    cursor: pointer;
+}
+  
+.card-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.image-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 2%;
+    margin-bottom: 5%;
+}
+
+.image-container img{
+    width: 100%;
+}
+
+.confirm-dialogue{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+  
+.confirm-icon{
+    font-size: 7rem;
+    align-self: center;
+}
+
+.confirm-header,
+.confirm-text{
+    margin-top: 10px;
+    text-align: center;
+}
+
+.confirm-buttons-dialogue{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+.add-button-container{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2%;
+}
+  
+  .modal-button{
+    width: 120px;
+    height: 50px;
+}
+  
+  .p-button-help,
+  .button{
+    padding: 5px;
+}
+  
+  .btn-pos{
+    margin-left: 10px;
+    padding: 5px;
+    padding-right: 10px;
+    width: 90px;
+    height: 50px;
+}
+  
+  .buttons-container{
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-end;
+}
+  
+  .card-button{
+    cursor: pointer;
+}
+  
+  .card-buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+
+
+
+
 .write-something-container{
     display: flex;
     flex-direction: row;
@@ -20,6 +171,7 @@
     width: 50%;
     padding: 1%;
     background-color: #C5C6D0;
+    box-shadow: -5px 5px 5px gainsboro;
 }
 
 .user-details-container{
@@ -39,10 +191,72 @@
     margin-left: 15%;
     font-size: 18px;
     font-weight: 600;
+    
 }
 
 .posts-container{
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
 }
+
+
+.text-area-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.post-comment-content{
+    margin-left: 20px;
+}
+
+
+.com-container{
+    display: flex;
+    border-top: 1px solid darkgrey;
+
+}
+
+.delete-post-button{
+    margin-left: 100%;
+}
+
+
+
+.com-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.user-comment-details-container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 1%;
+}
+
+.comment-content-container{
+    margin-left: 10%;
+}
+
+.name-container{
+    margin-left: 2%;
+}
+
+.delete-comment-button{
+    margin-left: 1%;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    outline: none; 
+  }
+  
+  a:hover,
+  a:focus {
+    text-decoration: none; 
+  }
+  

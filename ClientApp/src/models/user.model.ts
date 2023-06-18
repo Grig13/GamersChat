@@ -1,4 +1,3 @@
-import { Message } from "./message.model";
 import { Post } from "./post.model";
 import { Product } from "./product.model";
 
@@ -9,6 +8,6 @@ export class User{
     profilePicture?: string;
     description?: string;
     posts?: Post[];
+    connectionId?: string;
     products?: Product[];
-    messages?: Message[];
 }

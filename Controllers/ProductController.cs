@@ -10,7 +10,6 @@ namespace GamersChat.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [EnableCors("AllowOrigin")]
-    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly ProductService _productService;

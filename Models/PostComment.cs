@@ -12,7 +12,12 @@ public partial class PostComment
     public string Content { get; set; }
     public Guid PostId { get; set; }
     public Post? Post { get; set; }
-    public string userId { get; set; }
-    public ApplicationUser? User { get; set; }
 
+    // Foreign key property
+    [ForeignKey("User")]
+    public string UserId { get; set; }
+
+    // Navigation property
+    public ApplicationUser? User { get; set; }
 }
+

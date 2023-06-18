@@ -6,7 +6,6 @@ import { UserDTO } from 'src/models/UserDTO.model';
 import { Product } from 'src/models/product.model';
 import { ProductService } from 'src/services/product.service';
 import { UserAttributesService } from 'src/services/user-attributes.service';
-import { UserService } from 'src/services/user.service';
 
 @Component({
   selector: 'app-product-details',
@@ -20,6 +19,7 @@ export class ProductDetailsComponent implements OnInit {
   user?: IUser | null;
   userAttributes?: UserDTO;
   productUserId: any;
+  userProfilePicture$!: string;
 
   showMessageTab: boolean = false;
 
@@ -40,16 +40,19 @@ export class ProductDetailsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
     private productService: ProductService,
-    private authService: AuthorizeService,
     private userAttributesService: UserAttributesService) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('id');
-      console.log(this.productId);
     })
-    this.getUser();
     this.httpGetProduct();
+    if(this.product.userId){
+      this.userAttributesService.getUserAttributesById(this.product.userId).subscribe((user) => {
+        this.userAttributes = user;
+      });
+    }
+    
     
   }
 
@@ -64,17 +67,6 @@ export class ProductDetailsComponent implements OnInit {
         console.log(response);
       }
     });
-  }
-
-  getUser(): void{
-    this.authService.getUser().subscribe({
-      next: (user: IUser | null) => {
-        this.user = user;
-      },
-      error: (response) => {
-        console.log(response);
-      }
-    })
   }
 
 

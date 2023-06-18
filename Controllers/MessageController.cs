@@ -1,9 +1,11 @@
-﻿using GamersChat.Models;
+﻿using GamersChat.Data;
+using GamersChat.Models;
 using GamersChat.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace GamersChat.Controllers
 {
@@ -14,66 +16,28 @@ namespace GamersChat.Controllers
     public class MessageController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public MessageController(UserManager<ApplicationUser> userManager)
+        public MessageController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
 
         [HttpPost]
-        public async Task<IActionResult> SendMessage(MessageDTO messageDTO)
+        public async Task<IActionResult> Create(Message message)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            var message = new Message
+            if(ModelState.IsValid)
             {
-                Id = Guid.NewGuid(),
-                UserName = user.UserName,
-                Content = messageDTO.Content,
-                Timestamp = DateTime.Now,
-                UserId = user.Id,
-                Sender = user
-            };
-
-            // Save the message to your data store (e.g., database)
-
-            // You can also broadcast the message to other users using SignalR
-            // Here's an example of sending a message to all connected clients
-            // using a SignalR hub called "ChatHub":
-            // await _hubContext.Clients.All.SendAsync("ReceiveMessage", message.UserName, message.Content);
-
-            return Ok();
+                message.UserName = User.Identity.Name;
+                var sender = await _userManager.GetUserAsync(User);
+                message.UserId = sender.Id;
+                await _context.Messages.AddAsync(message);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest();
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetMessages()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-                return Unauthorized();
-
-            // Retrieve messages for the user from your data store (e.g., database)
-
-            // Example code for retrieving messages using LINQ:
-            // var messages = _dbContext.Messages
-            //     .Where(m => m.UserId == user.Id)
-            //     .OrderByDescending(m => m.Timestamp)
-            //     .ToList();
-
-            // Return the retrieved messages
-            // return Ok(messages);
-
-            return Ok();
-        }
-    }
-
-    public class MessageDTO
-    {
-        public string Content { get; set; }
+      
     }
 }
